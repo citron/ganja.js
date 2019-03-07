@@ -1,0 +1,45 @@
+<HEAD>
+    <meta charset="utf-8">
+    <SCRIPT SRC="../ganja.js"></SCRIPT>
+</HEAD>
+<BODY><SCRIPT>
+  // Create a Clifford Algebra with 4,1 metric for 3D CGA. 
+  Algebra(4,1,()=>{ 
+  
+  // null basis and point definition
+    var ni = 1e4+1e5, no = .5e4-.5e5,
+        up = (x)=> x + .5*x*x*ni - no;
+  
+    document.body.appendChild(this.graph(()=>{
+      // animation time 
+        var t = performance.now()/1000;
+  
+      // points o=(0,0,0) in black, i=(1,0,0) in red, j=(0,1,0) in green, k=(0,0,1) in blue just to remind the orientation
+      var o= up(0), i = up(1e1), j = up(1e2), k = up(1e3);
+
+
+      // sphere moving up and down as dual point with radius
+        var A=!(0);
+  
+      // define a circle and the plane of that circle
+        var c=up(1e3-.5e2)^up(-.5e2)^up(2e1-.5e2),
+            p=c^ni;      
+      
+      // Now graph the items and relevant intersections.
+      // Sphere and plane intersection is a circle.
+      // Circle and sphere intersection is a point pair.
+      return [
+        0x000000, o, "o",
+        0xFF0000, i, "i",
+        0x00FF00, j, "j",
+        0x0000FF, k, "k",
+          
+        0x0000FF, c, "circle",
+        0x0000FF, A&c, "point pair",
+        0x008800, A&p, 
+        0xccffcc, A,0x008800, "            sphere"
+      ]
+    },{conformal:true,gl:true,animate:true})); 
+  
+  });  
+  </SCRIPT></BODY>
