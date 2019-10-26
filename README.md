@@ -17,11 +17,22 @@ and expressions by using reflection, a built-in tokenizer and a simple AST trans
 rewrite functions containing algebraic constructs to their procedural counterparts.)
 
 (**Practically**, ganja.js enables real math syntax inside javascript, with element, vector and matrix
-operations over reals, complex numbers, dual numbers, quaternions, or any other Clifford Algebra.)
+operations over **reals**, **complex numbers**, **dual numbers**, **hyperbolic numbers**, **vectors**, **spacetime events**, **quaternions**, **dual quaternions**, **biquaternions** or **any other Clifford Algebra**.)
 
 (**Seriously**, look at the [examples](https://enkimute.github.io/ganja.js/examples/coffeeshop.html), 
 run some quick numbers using the [GAlculator](https://enkimute.github.io/ganja.js/examples/galculator.html)
 or play [the wedge game](https://enkimute.github.io/ganja.js/examples/example_game_wedge.html) first.)
+
+## New !
+
+ganja.js now has a nodejs based templated source generator that allows the creation of arbitrary algebras
+for **C++**, **C#**, **python** and **rust**. The generated code provides in a flat multivector format and operator overloading.
+Check the 'codegen' folder for the source, several algebras are available in pregenerated versions.
+
+* [**C++ pre-generated sources**](https://github.com/enkimute/ganja.js/tree/master/codegen/cpp)
+* [**C# pre-generated sources**](https://github.com/enkimute/ganja.js/tree/master/codegen/csharp)
+* [**rust pre-generated sources**](https://github.com/enkimute/ganja.js/tree/master/codegen/rust)
+* [**python pre-generated sources**](https://github.com/enkimute/ganja.js/tree/master/codegen/python)
 
 ## Contents
 
@@ -41,13 +52,13 @@ inline syntax and graphing makes math in the browser feel like .. math.
 
 * Operator overloading
 * Algebraic constants
-* Supports any metric (positive,negative,zero)
-* smallish (13.4kb on the wire)
+* Supports any metric (positive,negative,zero) and dimensionality (also +10)  
+* smallish (20kb on the wire)
 * matrix-free inverses up to 5D.
-* geometric, inner (contraction), outer (wedge) and vee product
+* geometric, inner (left contraction), outer (wedge) and regressive (vee) product
 * conjugate, Reverse, Involute, Dual (Poincare), Negative
 * 4 API's (inline, asciimath, object oriented, functional)
-* Easy graph function for 1D and 2D functions, Projective 2D, 3D and conformal 2D and 3D elements.
+* Easy graph function for 1D and 2D functions, Projective 2D, 3D and conformal 2D and 3D elements. (SVG/webGL/OPNS)
 * Supports vectors and matrices in all its algebras.
 * There's a [game](https://enkimute.github.io/ganja.js/examples/example_game_wedge.html) that teaches you how to use ganja.js !
 
@@ -64,7 +75,7 @@ And require it in your script :
 var Algebra=require('ganja.js');
 ```
 
-Or in the browser, just include the ganja.js script. (ganja.js has no dependencies - just 9.0kb on the wire)
+Or in the browser, just include the ganja.js script. (ganja.js has no dependencies - just 20.0kb on the wire)
 
 ```html
 <SCRIPT SRC="https://unpkg.com/ganja.js"></SCRIPT>
@@ -109,7 +120,7 @@ Here are some examples :
 var Hyper   = Algebra(1);       // Hyperbolic numbers. 
 var Complex = Algebra(0,1);     // Complex numbers.
 var Dual    = Algebra(0,0,1);   // Dual numbers.
-var H = Algebra(0,2);           // Quaternions.
+var H       = Algebra(0,2);     // Quaternions.
 
 // Clifford
 var Cl2 = Algebra(2);           // Clifford algebra for 2D vector space.
@@ -125,6 +136,12 @@ var PGA2D = Algebra(2,0,1);     // Projective Euclidean 2D plane. (dual)
 var PGA3D = Algebra(3,0,1);     // Projective Euclidean 3D space. (dual)
 var CGA2D = Algebra(3,1);       // conformal 2D space. 
 var CGA3D = Algebra(4,1);       // Conformal 3D space. 
+
+// High-Dimensional GA
+var DCGA3D = Algebra(6,2);      // Double Conformal 3D Space.
+var TCGA3D = Algebra(9,3);      // Tripple Conformal 3D Space.
+var DCGSTA = Algebra(4,8);      // Double Conformal Geometric Space Time Algebra.
+var QCGA   = Algebra(9,6);      // Quadric Conformal Geometric Algebra.  
 ```
 
 You can now use these classes to generate algebraic elements. Those elements will have all of the
@@ -217,11 +234,12 @@ examples of how to use the inline syntax.
 ### The graph function.
 
 Your Algebra also exposes a static **_graph_** function that allows you to
-easily graph 1D or 2D functions as well as 2D and 3D PGA elements.
+easily graph 1D or 2D functions as well as 2D and 3D PGA and CGA elements.
 
-canvas output is available for 1D and 2D functions.
-SVG output is available for 2D PGA, 3D PGA and 2D CGA.
-webGL output is available for 3D PGA and 3D CGA.
+* canvas output is available for 1D and 2D functions.
+* SVG output is available for 2D PGA, 3D PGA and 2D CGA.
+* webGL output is available for 3D PGA and 3D CGA.
+* webGL2 implicit OPNS rendering is available for all other spaces.
 
 ```javascript
 canvas = Algebra(0).graph(x=>Math.sin(x*5));                   // Graph a 1D function in R
@@ -259,8 +277,6 @@ Matrix Form:
  B, A
 ```
 
-
-
 <A NAME="samples"></A>
 ## Getting free ganja samples.
 
@@ -269,134 +285,311 @@ and play around with the examples. They are interactive and you can easily
 change the code online. No need to download or install anything !
 
 <TABLE BORDER=0 CELLSPACING=0 CELLPADDING=0>
-<TR><TD ALIGN=CENTER>
-Complex Mandelbrot<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#complex_mandelbrot"           TARGET="_blank" TITLE="Complex Mandelbrot">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/complex_mandelbrot.jpg"></A>
-</TD><TD ALIGN=CENTER>
-Mandelbrot with Quaternion Hue colorisation<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#quaternion_mandelbrot"        TARGET="_blank" TITLE="Mandelbrot with Quaternion Hue colorisation">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/quaternion_mandelbrot.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-Automatic Differentiation<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#dual_differentiation"         TARGET="_blank" TITLE="Dual Numbers Automatic Differentiation">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/dual_differentiation.jpg"></A>
-</TD><TD ALIGN=CENTER>
-Convolutional Neural Network AND port<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#dual_backpropagation"         TARGET="_blank" TITLE="Convolutional Neural Network">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/dual_backprop.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-Quaternion color rotations<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#quaternion_hue"               TARGET="_blank" TITLE="Quaternion Hue Rotations">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/quaternion_hue.jpg"></A>
-<TD ALIGN=CENTER>
-PGA3D Points and Lines<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_points_and_lines"       TARGET="_blank" TITLE="PGA3D Points and Lines">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_points_and_lines.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA3D Distances and Angles<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_distances_and_angles"   TARGET="_blank" TITLE="PGA3D Distances and Angles">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_distances_and_angles.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA3D Rotors and Translators<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_rotors_and_translators" TARGET="_blank" TITLE="PGA3D Rotors and Translators">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_rotors_and_translators.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA3D Slicing<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_slicing"                TARGET="_blank" TITLE="PGA3D Slicing">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_slicing.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA3D Icosahedron<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_icosahedron"            TARGET="_blank" TITLE="PGA3D Icosahedron">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_icosahedron.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA3D Sampling<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_sampling"               TARGET="_blank" TITLE="PGA3D Sampling">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_sampling.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA3D Automatic Differentiation<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_differentiation"        TARGET="_blank" TITLE="PGA3D Automatic Differentiation">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_differentiation.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA3D Physics Planets<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_physics_planets"        TARGET="_blank" TITLE="PGA3D Physics Planets">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_physics_planets.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA3D Physics Symmetric Top<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_physics_symmetric_top"  TARGET="_blank" TITLE="PGA3D Physics Symmetric Top">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_physics_symmetric_top.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA3D Physics Free Top<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_physics_free_top"       TARGET="_blank" TITLE="PGA3D Physics Free Top">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_physics_free_top.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA3D Origami<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_origami"                TARGET="_blank" TITLE="PGA3D Origami">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_origami.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA3D Objects<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_objects"                TARGET="_blank" TITLE="PGA3D Objects">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_objects.jpg"></A>
-</TD><TD ALIGN=CENTER>
-CGA3D Spheres<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_points_and_spheres"     TARGET="_blank" TITLE="CGA3D points and spheres">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_spheres.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA2D Origami<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_origami"                TARGET="_blank" TITLE="PGA2D Origami">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_origami.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA2D Physics Moon<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_physics_moon"           TARGET="_blank" TITLE="PGA2D Physics Moon">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_physics_moon.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA2D Points and Lines<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_points_and_lines"       TARGET="_blank" TITLE="PGA2D Points and Lines">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_points_and_lines.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA2D Distances and Angles<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_distances_and_angles"   TARGET="_blank" TITLE="PGA2D Distances and Angles">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_distances_and_angles.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA2D Project and Reject<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_project_and_reject"     TARGET="_blank" TITLE="PGA2D Project and Reject">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_project_and_reject.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA2D Rotors and Translators<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_rotors_and_translators" TARGET="_blank" TITLE="PGA2D Rotors and Translators">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_rotors_and_translators.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA2D Isometries<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_isometries"             TARGET="_blank" TITLE="PGA2D Isometries">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_isometries.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA2D Inverse Kinematics<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_inverse_kinematics"     TARGET="_blank" TITLE="PGA2D Inverse Kinematics">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_inverse_kinematics.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA2D Separating Axis<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_separating_axis"        TARGET="_blank" TITLE="PGA2D Separating Axis">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_separating_axis.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA2D Pose Estimation<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_pose_estimation"        TARGET="_blank" TITLE="PGA2D Pose Estimation">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_pose_estimation.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-PGA2D Euler Line<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_euler_line"             TARGET="_blank" TITLE="PGA2D Euler Line">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_euler_line.jpg"></A>
-</TD><TD ALIGN=CENTER>
-PGA2D Desargues Theorem<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_desargues_theorem"      TARGET="_blank" TITLE="PGA2D Desargues Theorem">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_desargues_theorem.jpg"></A>
-</TD></TR><TR><TD ALIGN=CENTER>
-CGA2D Euler Line<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga2d_euler_line"             TARGET="_blank" TITLE="CGA2D Euler Line">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga2d_euler_line.jpg"></A>
-</TD><TD ALIGN=CENTER>
-CGA2D Points and Circles<BR>
-<A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga2d_points_and_circles"     TARGET="_blank" TITLE="CGA2D Points and Circles">
-<IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga2d_points_and_circles.jpg"></A>
+<THEAD>
+  <TR><TH WIDTH=50%></TH><TH WIDTH=50%></TH></TR>
+</THEAD>
+<TBODY>
+<TR>
+  <TD ALIGN=CENTER WIDTH="50%" STYLE="width:50%">
+    complex mandelbrot<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#complex_mandelbrot" TARGET="_blank" TITLE="complex mandelbrot">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/complex_mandelbrot.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    complex least squares<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#complex_least_squares" TARGET="_blank" TITLE="complex least squares">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/complex_least_squares.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    dual differentiation<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#dual_differentiation" TARGET="_blank" TITLE="dual differentiation">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/dual_differentiation.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    dual backpropagation<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#dual_backpropagation" TARGET="_blank" TITLE="dual backpropagation">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/dual_backpropagation.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    quaternion hue<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#quaternion_hue" TARGET="_blank" TITLE="quaternion hue">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/quaternion_hue.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    quaternion mandelbrot<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#quaternion_mandelbrot" TARGET="_blank" TITLE="quaternion mandelbrot">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/quaternion_mandelbrot.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    timespace lorentz<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#timespace_lorentz" TARGET="_blank" TITLE="timespace lorentz">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/timespace_lorentz.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d points and lines<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_points_and_lines" TARGET="_blank" TITLE="pga2d points and lines">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_points_and_lines.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d distances and angles<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_distances_and_angles" TARGET="_blank" TITLE="pga2d distances and angles">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_distances_and_angles.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d project and reject<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_project_and_reject" TARGET="_blank" TITLE="pga2d project and reject">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_project_and_reject.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d rotors and translators<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_rotors_and_translators" TARGET="_blank" TITLE="pga2d rotors and translators">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_rotors_and_translators.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d isometries<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_isometries" TARGET="_blank" TITLE="pga2d isometries">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_isometries.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d inverse kinematics<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_inverse_kinematics" TARGET="_blank" TITLE="pga2d inverse kinematics">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_inverse_kinematics.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d separating axis<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_separating_axis" TARGET="_blank" TITLE="pga2d separating axis">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_separating_axis.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d pose estimation<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_pose_estimation" TARGET="_blank" TITLE="pga2d pose estimation">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_pose_estimation.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d euler line<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_euler_line" TARGET="_blank" TITLE="pga2d euler line">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_euler_line.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d desargues theorem<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_desargues_theorem" TARGET="_blank" TITLE="pga2d desargues theorem">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_desargues_theorem.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d differentiation<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_differentiation" TARGET="_blank" TITLE="pga2d differentiation">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_differentiation.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d physics moon<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_physics_moon" TARGET="_blank" TITLE="pga2d physics moon">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_physics_moon.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d origami<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_origami" TARGET="_blank" TITLE="pga2d origami">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_origami.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga2d poncelet<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga2d_poncelet" TARGET="_blank" TITLE="pga2d poncelet">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga2d_poncelet.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d points and lines<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_points_and_lines" TARGET="_blank" TITLE="pga3d points and lines">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_points_and_lines.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d distances and angles<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_distances_and_angles" TARGET="_blank" TITLE="pga3d distances and angles">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_distances_and_angles.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d rotors and translators<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_rotors_and_translators" TARGET="_blank" TITLE="pga3d rotors and translators">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_rotors_and_translators.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d icosahedron<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_icosahedron" TARGET="_blank" TITLE="pga3d icosahedron">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_icosahedron.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d sampling<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_sampling" TARGET="_blank" TITLE="pga3d sampling">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_sampling.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d slicing<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_slicing" TARGET="_blank" TITLE="pga3d slicing">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_slicing.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d differentiation<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_differentiation" TARGET="_blank" TITLE="pga3d differentiation">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_differentiation.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d skinning<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_skinning" TARGET="_blank" TITLE="pga3d skinning">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_skinning.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d physics planets<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_physics_planets" TARGET="_blank" TITLE="pga3d physics planets">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_physics_planets.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d origami<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_origami" TARGET="_blank" TITLE="pga3d origami">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_origami.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d physics symmetric top<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_physics_symmetric_top" TARGET="_blank" TITLE="pga3d physics symmetric top">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_physics_symmetric_top.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d physics free top<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_physics_free_top" TARGET="_blank" TITLE="pga3d physics free top">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_physics_free_top.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    pga3d objects<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#pga3d_objects" TARGET="_blank" TITLE="pga3d objects">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/pga3d_objects.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga2d points and circles<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga2d_points_and_circles" TARGET="_blank" TITLE="cga2d points and circles">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga2d_points_and_circles.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga2d project and reject<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga2d_project_and_reject" TARGET="_blank" TITLE="cga2d project and reject">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga2d_project_and_reject.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga2d rotors and translators<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga2d_rotors_and_translators" TARGET="_blank" TITLE="cga2d rotors and translators">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga2d_rotors_and_translators.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga2d euler line<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga2d_euler_line" TARGET="_blank" TITLE="cga2d euler line">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga2d_euler_line.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d points circles lines<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_points_circles_lines" TARGET="_blank" TITLE="cga3d points circles lines">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_points_circles_lines.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d points spheres planes<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_points_spheres_planes" TARGET="_blank" TITLE="cga3d points spheres planes">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_points_spheres_planes.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d dual spheres planes<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_dual_spheres_planes" TARGET="_blank" TITLE="cga3d dual spheres planes">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_dual_spheres_planes.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d intersections<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_intersections" TARGET="_blank" TITLE="cga3d intersections">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_intersections.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d project reject<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_project_reject" TARGET="_blank" TITLE="cga3d project reject">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_project_reject.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d opns visualizer<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_opns_visualizer" TARGET="_blank" TITLE="cga3d opns visualizer">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_opns_visualizer.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d opns line circle<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_opns_line_circle" TARGET="_blank" TITLE="cga3d opns line circle">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_opns_line_circle.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    cga3d json<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#cga3d_json" TARGET="_blank" TITLE="cga3d json">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/cga3d_json.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    mga3d points and lines<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#mga3d_points_and_lines" TARGET="_blank" TITLE="mga3d points and lines">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/mga3d_points_and_lines.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    ccga3d points quadrics<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#ccga3d_points_quadrics" TARGET="_blank" TITLE="ccga3d points quadrics">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/ccga3d_points_quadrics.jpg"></A>
+  </TD>
+</TR>
+<TR>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    qcga3d points and more<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#qcga3d_points_and_more" TARGET="_blank" TITLE="qcga3d points and more">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/qcga3d_points_and_more.jpg"></A>
+  </TD>
+  <TD ALIGN=CENTER WIDTH=50% STYLE="width:50%">
+    game wedge<BR>
+    <A HREF="https://enkimute.github.io/ganja.js/examples/coffeeshop.html#game_wedge" TARGET="_blank" TITLE="game wedge">
+    <IMG SRC="https://raw.githubusercontent.com/enkimute/ganja.js/HEAD/images/game_wedge.jpg"></A>
+  </TD>
+</TR>
+</TBODY>
 </TABLE>
 
 ganja.js is also the engine behind the GAlculator - try it [online](https://enkimute.github.io/ganja.js/examples/galculator.html) or get it on the [play store](https://play.google.com/store/apps/details?id=io.github.enkimute) 
@@ -405,7 +598,7 @@ ganja.js is also the engine behind the GAlculator - try it [online](https://enki
 
 Or - get some hands on experience with euclidian plane PGA by playing the [wedge game](https://enkimute.github.io/ganja.js/examples/example_game_wedge.html).
 
-<A HREF="https://enkimute.github.io/ganja.js/examples/example_game_wedge.html" TARGET="_blank"><IMG SRC="images/wedge.png"></A>
+<A HREF="https://enkimute.github.io/ganja.js/examples/example_game_wedge.html" TARGET="_blank"><IMG SRC="images/game_wedge.jpg"></A>
 
 
 <A NAME="custom"></A>
